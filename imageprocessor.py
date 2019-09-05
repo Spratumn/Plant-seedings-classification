@@ -49,4 +49,25 @@ class ImageProcessor:
         """
         image_out = cv.flip(image, 1)
         return image_out
+    
+    def get_plant_region(self,image):
+        """
+        获取植物部分
+        :param image:
+        :return: 植物部分的图片
+        """
+        if image is not None:  # 判断图片是否读入
+            HSV = cv.cvtColor(image, cv.COLOR_BGR2HSV)  # 把BGR图像转换为HSV格式
+            '''
+            HSV模型中颜色的参数分别是：色调（H），饱和度（S），明度（V）
+            下面两个值是要识别的颜色范围
+            '''
+            lower = np.array([30, 0, 0])
+            upper = np.array([80, 255, 255])
+            mask = cv.inRange(HSV, lower, upper)
+            # 把原图中的非目标颜色区域去掉
+            target = cv.bitwise_and(image, image, mask=mask)
+            return target
+        else:
+            return
 
